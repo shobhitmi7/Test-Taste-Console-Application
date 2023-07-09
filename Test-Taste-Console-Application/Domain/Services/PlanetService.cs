@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
@@ -44,6 +45,7 @@ namespace Test_Taste_Console_Application.Domain.Services
 
             //The JSON converter can return a null object. 
             if (results == null) return allPlanetsWithTheirMoons;
+            int i = 1;
 
             //If the planet doesn't have any moons, then it isn't added to the collection.
             foreach (var planet in results.Bodies)
@@ -53,6 +55,12 @@ namespace Test_Taste_Console_Application.Domain.Services
 
                 if (planet.Moons != null)
                 {
+
+                    //Display the loading message
+                    Console.SetCursorPosition(0, Console.CursorTop - 1);
+                    ClearCurrentConsoleLine();
+                    Console.WriteLine($"Loading moons of planets ({i}/{results.Bodies.Count})...");
+
                     var newMoonsCollection = new Collection<MoonDto>();
                     foreach (var moon in planet.Moons)
                     {
@@ -70,6 +78,7 @@ namespace Test_Taste_Console_Application.Domain.Services
                 }
 
                 allPlanetsWithTheirMoons.Add(new Planet(planet, avgMoonGravity));
+                i++;
             }
 
             return allPlanetsWithTheirMoons;
@@ -93,6 +102,14 @@ namespace Test_Taste_Console_Application.Domain.Services
             return stringBuilder
                 .ToString()
                 .Normalize(NormalizationForm.FormC);
+        }
+
+        private void ClearCurrentConsoleLine()
+        {
+            int currentLineCursor = Console.CursorTop;
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, currentLineCursor);
         }
     }
 }

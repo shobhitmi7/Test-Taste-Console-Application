@@ -48,7 +48,10 @@ namespace Test_Taste_Console_Application.Domain.Services
             //If the planet doesn't have any moons, then it isn't added to the collection.
             foreach (var planet in results.Bodies)
             {
-                if(planet.Moons != null)
+                float cumulativeMoonGravity = 0.0f;
+                float avgMoonGravity = 0.0f;
+
+                if (planet.Moons != null)
                 {
                     var newMoonsCollection = new Collection<MoonDto>();
                     foreach (var moon in planet.Moons)
@@ -57,12 +60,16 @@ namespace Test_Taste_Console_Application.Domain.Services
                             .GetAsync(UriPath.GetMoonByIdQueryParameters + moon.URLId)
                             .Result;
                         var moonContent = moonResponse.Content.ReadAsStringAsync().Result;
-                        newMoonsCollection.Add(JsonConvert.DeserializeObject<MoonDto>(moonContent));
+                        var newMoon = JsonConvert.DeserializeObject<MoonDto>(moonContent);
+                        newMoonsCollection.Add(newMoon);
+                        cumulativeMoonGravity += newMoon.Gravity;
                     }
-                    planet.Moons = newMoonsCollection;
 
+                    planet.Moons = newMoonsCollection;
+                    avgMoonGravity = cumulativeMoonGravity / planet.Moons.Count;
                 }
-                allPlanetsWithTheirMoons.Add(new Planet(planet));
+
+                allPlanetsWithTheirMoons.Add(new Planet(planet, avgMoonGravity));
             }
 
             return allPlanetsWithTheirMoons;

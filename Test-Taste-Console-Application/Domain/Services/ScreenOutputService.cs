@@ -166,7 +166,16 @@ namespace Test_Taste_Console_Application.Domain.Services
             {
                 if(planet.HasMoons())
                 {
-                    ConsoleWriter.CreateText(new string[] { $"{planet.Id}", $"{planet.AverageMoonGravity}" }, columnSizes);
+                    //Density of every moon of a few planets is always zero, since this is not possible it clearly means
+                    //that correct data is not available on api side, hence "No data" is returned here.
+                    if (planet.AverageMoonGravity == 0)
+                    {
+                        ConsoleWriter.CreateText(new string[] { $"{planet.Id}", $"No data" }, columnSizes);
+                    }
+                    else
+                    {
+                        ConsoleWriter.CreateText(new string[] { $"{planet.Id}", $"{planet.AverageMoonGravity}" }, columnSizes);
+                    }
                 }
                 else
                 {

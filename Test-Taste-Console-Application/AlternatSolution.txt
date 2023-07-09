@@ -1,0 +1,4 @@
+Another solution that came up to me was following:
+Instead of adding calculating the average of all the moon gravities while fetching the moon inforamtion in PlanetService.cs, it can be done in ScreenOutputService.cs file by running a loop through planet.moons and calculating the average just before displaying. I abandoned this idea due to following two reasons:
+	1. Since the class name is ScreenOutputService.cs it should only bear the responsibility of producing screen output and not any other process will violate the Single Responsibility Principle.
+	2. This method will add an extra loop iteration which will cost time. Since a loop is already running, it is best to move this process of calculating the Average Moon Gravity there itself.
